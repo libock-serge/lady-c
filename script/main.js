@@ -1,211 +1,183 @@
-// ===== Valentine Countdown Configuration =====
-const CONFIG = {
-  // Start date: February 2, 2026 at midnight
-  startDate: new Date("2026-02-02T00:00:00"),
-  // Valentine's Day: February 14, 2026 (main countdown target)
-  endDate: new Date("2026-02-14T00:00:00"),
-  // Anniversary date: February 11, 2026 (QR code reveal date)
-  anniversaryDate: new Date("2026-02-11T00:00:00"),
-  // Total days for card reveals (Feb 2-13 = 12 days, 1 card per day = 12 cards)
-  totalDays: 12,
-  // TEMPORARY: Set to true to unlock everything for testing
-  debugMode: true,
-};
+// ===== Birthday Page for Carole =====
 
-// ===== DOM Elements =====
-const elements = {
-  days: document.getElementById("days"),
-  hours: document.getElementById("hours"),
-  minutes: document.getElementById("minutes"),
-  seconds: document.getElementById("seconds"),
-  loveCards: document.querySelectorAll(".love-card"),
-  revealContent: document.getElementById("reveal-content"),
-  revealLocked: document.getElementById("reveal-locked"),
-};
+// ===== Confetti Canvas =====
+function initConfetti() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  let running = false;
 
-// ===== Calculate Current Day (1-12) =====
-function getCurrentDay() {
-  // Debug mode: unlock all cards
-  if (CONFIG.debugMode) return CONFIG.totalDays + 1;
-
-  const now = new Date();
-  const startDate = CONFIG.startDate;
-  const timeDiff = now - startDate;
-  const daysPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-
-  // Return the current day number (1-12), capped at 12
-  if (daysPassed < 0) return 0; // Before start
-  if (daysPassed >= CONFIG.totalDays) return CONFIG.totalDays + 1; // After countdown ends
-  return daysPassed + 1; // Current day (1-indexed)
-}
-
-// ===== Update Countdown Timer =====
-function updateCountdown() {
-  const now = new Date();
-  const endDate = CONFIG.endDate;
-  const timeDiff = endDate - now;
-
-  if (timeDiff <= 0) {
-    // Countdown finished!
-    elements.days.textContent = "0";
-    elements.hours.textContent = "0";
-    elements.minutes.textContent = "0";
-    elements.seconds.textContent = "0";
-    revealFinalSurprise();
-    return;
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
+  resize();
+  window.addEventListener("resize", resize);
 
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  );
-  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+  const colors = ["#ff6b9d", "#ffa5c3", "#ffd700", "#ff1493", "#c44569", "#ffb347", "#ff69b4"];
 
-  elements.days.textContent = days;
-  elements.hours.textContent = hours;
-  elements.minutes.textContent = minutes;
-  elements.seconds.textContent = seconds;
-}
-
-// ===== Reveal Love Cards Based on Current Day =====
-function updateLoveCards() {
-  const currentDay = getCurrentDay();
-
-  elements.loveCards.forEach((card) => {
-    const cardDay = parseInt(card.dataset.day);
-
-    if (cardDay <= currentDay) {
-      // This card should be revealed
-      card.classList.add("revealed");
-      card.classList.remove("locked");
-    } else {
-      // This card is still locked
-      card.classList.add("locked");
-      card.classList.remove("revealed");
+  function createBurst(count) {
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 100,
+        w: 6 + Math.random() * 6,
+        h: 12 + Math.random() * 8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vy: 1.5 + Math.random() * 3,
+        vx: (Math.random() - 0.5) * 2,
+        rot: Math.random() * 360,
+        rotSpeed: (Math.random() - 0.5) * 8,
+        opacity: 1,
+      });
     }
-  });
-}
-
-// ===== Reveal Final Surprise (QR Code) - On Anniversary =====
-function revealFinalSurprise() {
-  if (elements.revealContent && elements.revealLocked) {
-    elements.revealLocked.classList.add("hidden");
-    elements.revealContent.classList.remove("hidden");
-
-    // Add celebration animation
-    elements.revealContent.classList.add("celebrate");
-    createConfetti();
+    if (!running) { running = true; animate(); }
   }
-}
 
-// ===== Check if Anniversary Date Reached (Video Reveal) =====
-function isAnniversaryReached() {
-  // Debug mode: always show reveal
-  if (CONFIG.debugMode) return true;
-  return new Date() >= CONFIG.anniversaryDate;
-}
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles = particles.filter((p) => p.opacity > 0);
 
-// ===== Check if Valentine's Day Reached =====
-function isValentinesDay() {
-  return new Date() >= CONFIG.endDate;
-}
+    particles.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.rotSpeed;
+      if (p.y > canvas.height) p.opacity -= 0.05;
+      p.opacity = Math.max(0, p.opacity);
 
-// ===== Create Confetti Animation =====
-function createConfetti() {
-  const colors = ["#ff6b9d", "#ffa5c3", "#ff69b4", "#ffd700", "#ff1493"];
-  const confettiContainer = document.createElement("div");
-  confettiContainer.className = "confetti-container";
-  document.body.appendChild(confettiContainer);
-
-  for (let i = 0; i < 50; i++) {
-    const confetti = document.createElement("div");
-    confetti.className = "confetti";
-    confetti.style.left = Math.random() * 100 + "vw";
-    confetti.style.backgroundColor =
-      colors[Math.floor(Math.random() * colors.length)];
-    confetti.style.animationDelay = Math.random() * 3 + "s";
-    confetti.style.animationDuration = Math.random() * 2 + 3 + "s";
-    confettiContainer.appendChild(confetti);
-  }
-}
-
-// ===== Add Staggered Animation to Cards =====
-function animateCardsOnLoad() {
-  elements.loveCards.forEach((card, index) => {
-    card.style.animationDelay = `${index * 0.1}s`;
-    card.classList.add("fade-in-up");
-  });
-}
-
-// ===== Sparkle Effect on Hover =====
-function addSparkleEffects() {
-  elements.loveCards.forEach((card) => {
-    card.addEventListener("mouseenter", () => {
-      if (card.classList.contains("revealed")) {
-        createSparkles(card);
-      }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate((p.rot * Math.PI) / 180);
+      ctx.globalAlpha = p.opacity;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
     });
+
+    if (particles.length > 0) {
+      requestAnimationFrame(animate);
+    } else {
+      running = false;
+    }
+  }
+
+  return { burst: createBurst };
+}
+
+// ===== Floating Emojis Background =====
+function initFloatingEmojis() {
+  const container = document.getElementById("floating-emojis");
+  const emojis = ["💖", "🎂", "✨", "🥂", "🎈", "🎉", "💕", "🌹", "🎁", "⭐"];
+
+  function spawnEmoji() {
+    const el = document.createElement("span");
+    el.className = "floating-emoji";
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + "%";
+    el.style.fontSize = (1.2 + Math.random() * 1.5) + "rem";
+    el.style.animationDuration = (8 + Math.random() * 8) + "s";
+    el.style.animationDelay = Math.random() * 2 + "s";
+    container.appendChild(el);
+
+    setTimeout(() => el.remove(), 18000);
+  }
+
+  // Initial batch
+  for (let i = 0; i < 12; i++) {
+    setTimeout(spawnEmoji, i * 400);
+  }
+  // Continuous
+  setInterval(spawnEmoji, 1500);
+}
+
+// ===== Photo Carousel =====
+function initCarousel() {
+  const track = document.getElementById("gallery-track");
+  const slides = track.querySelectorAll(".gallery-slide");
+  const dotsContainer = document.getElementById("carousel-dots");
+  const prevBtn = document.getElementById("prev-btn");
+  const nextBtn = document.getElementById("next-btn");
+  let current = 0;
+  let autoTimer;
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement("button");
+    dot.className = "carousel-dot" + (i === 0 ? " active" : "");
+    dot.setAttribute("aria-label", "Go to image " + (i + 1));
+    dot.addEventListener("click", () => goTo(i));
+    dotsContainer.appendChild(dot);
   });
+
+  function goTo(index) {
+    current = ((index % slides.length) + slides.length) % slides.length;
+    track.style.transform = `translateX(-${current * 100}%)`;
+    dotsContainer.querySelectorAll(".carousel-dot").forEach((d, i) => {
+      d.classList.toggle("active", i === current);
+    });
+    resetAuto();
+  }
+
+  prevBtn.addEventListener("click", () => goTo(current - 1));
+  nextBtn.addEventListener("click", () => goTo(current + 1));
+
+  // Swipe support
+  let touchStartX = 0;
+  track.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener("touchend", (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+  });
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => goTo(current + 1), 4000);
+  }
+  resetAuto();
 }
 
-function createSparkles(element) {
-  const sparkleCount = 5;
-  for (let i = 0; i < sparkleCount; i++) {
-    const sparkle = document.createElement("span");
-    sparkle.className = "sparkle";
-    sparkle.style.left = Math.random() * 100 + "%";
-    sparkle.style.top = Math.random() * 100 + "%";
-    sparkle.style.animationDelay = Math.random() * 0.5 + "s";
-    element.appendChild(sparkle);
+// ===== Scroll Reveal =====
+function initScrollReveal() {
+  const items = document.querySelectorAll(".reveal-on-scroll");
 
-    setTimeout(() => sparkle.remove(), 1000);
-  }
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 }
+  );
+
+  items.forEach((item) => observer.observe(item));
 }
 
-// ===== Pulse Animation for Countdown When Close =====
-function checkCountdownUrgency() {
-  const now = new Date();
-  const timeDiff = CONFIG.endDate - now;
-  const hoursLeft = timeDiff / (1000 * 60 * 60);
+// ===== Intro Overlay =====
+function initIntro(confetti) {
+  const overlay = document.getElementById("intro-overlay");
+  const mainContent = document.getElementById("main-content");
 
-  if (hoursLeft <= 24 && hoursLeft > 0) {
-    document.querySelector(".countdown-section").classList.add("urgent");
+  function open() {
+    overlay.classList.add("hidden");
+    mainContent.classList.add("visible");
+    confetti.burst(120);
+
+    // Second burst after a moment
+    setTimeout(() => confetti.burst(60), 1500);
   }
+
+  overlay.addEventListener("click", open);
+  overlay.addEventListener("touchstart", open, { passive: true });
 }
 
 // ===== Initialize Everything =====
-function init() {
-  // Initial updates
-  updateCountdown();
-  updateLoveCards();
-  animateCardsOnLoad();
-  addSparkleEffects();
-  checkCountdownUrgency();
-
-  // Check if anniversary reached (reveal QR code)
-  if (isAnniversaryReached()) {
-    revealFinalSurprise();
-  }
-
-  // Update countdown every second
-  setInterval(updateCountdown, 1000);
-
-  // Update cards every minute (in case day changes while viewing)
-  setInterval(updateLoveCards, 60000);
-
-  // Check urgency every hour
-  setInterval(checkCountdownUrgency, 3600000);
-
-  // Add click interaction to revealed cards (optional flip back)
-  elements.loveCards.forEach((card) => {
-    card.addEventListener("click", () => {
-      if (card.classList.contains("revealed")) {
-        card.classList.toggle("flipped-back");
-      }
-    });
-  });
-}
-
-// ===== Start when DOM is ready =====
-document.addEventListener("DOMContentLoaded", init);
+document.addEventListener("DOMContentLoaded", () => {
+  const confetti = initConfetti();
+  initIntro(confetti);
+  initFloatingEmojis();
+  initCarousel();
+  initScrollReveal();
+});

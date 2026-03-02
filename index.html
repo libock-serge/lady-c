@@ -3,254 +3,110 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>For My Valentine ♡</title>
+    <title>Happy Birthday, Carole 💖🎂</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
     <link rel="shortcut icon" type="image/png" href="./img/heart.svg" />
     <link rel="stylesheet" href="style/style.css" />
   </head>
 
   <body>
-    <!-- Floating Hearts Background -->
-    <div class="floating-hearts">
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
-      <span class="heart">♡</span>
+    <!-- Intro Overlay -->
+    <div class="intro-overlay" id="intro-overlay">
+      <div class="intro-content">
+        <div class="intro-heart">💖</div>
+        <h1 class="intro-title">For Carole</h1>
+        <p class="intro-sub">Tap anywhere to open your gift</p>
+      </div>
     </div>
 
-    <div class="container">
-      <!-- Header Section -->
-      <header class="hero">
-        <h1 class="title">Carole, My Valentine</h1>
-        <p class="subtitle">A countdown to our special day together...</p>
+    <!-- Canvas for confetti / particles -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Floating emojis background -->
+    <div class="floating-emojis" id="floating-emojis"></div>
+
+    <div class="container" id="main-content">
+      <!-- Hero Section -->
+      <header class="hero reveal-on-scroll">
+        <p class="hero-emoji">🎂</p>
+        <h1 class="title">Happy Birthday, Carole!</h1>
+        <p class="subtitle">Today is all about you 💖</p>
       </header>
 
-      <!-- Countdown Section -->
-      <section class="countdown-section">
-        <h2 class="countdown-title">Time Until Valentine's Day</h2>
-        <div class="countdown-timer">
-          <div class="time-unit">
-            <span id="days" class="time-value">0</span>
-            <span class="time-label">Days</span>
+      <!-- Photo Gallery Section -->
+      <section class="gallery-section reveal-on-scroll">
+        <h2 class="section-title">Moments with You ✨</h2>
+        <div class="gallery-carousel" id="gallery-carousel">
+          <div class="gallery-track" id="gallery-track">
+            <div class="gallery-slide active">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.17.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.23.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.24.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.25.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.26.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.25.27.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.46.09 (1).jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.46.10.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-02 at 23.46.19.jpeg" alt="Carole" />
+            </div>
+            <div class="gallery-slide">
+              <img src="img/carole/WhatsApp Image 2026-03-03 at 23.25.24.jpeg" alt="Carole" />
+            </div>
           </div>
-          <div class="time-unit">
-            <span id="hours" class="time-value">0</span>
-            <span class="time-label">Hours</span>
-          </div>
-          <div class="time-unit">
-            <span id="minutes" class="time-value">0</span>
-            <span class="time-label">Minutes</span>
-          </div>
-          <div class="time-unit">
-            <span id="seconds" class="time-value">0</span>
-            <span class="time-label">Seconds</span>
-          </div>
+          <button class="carousel-btn prev" id="prev-btn" aria-label="Previous">&#10094;</button>
+          <button class="carousel-btn next" id="next-btn" aria-label="Next">&#10095;</button>
+          <div class="carousel-dots" id="carousel-dots"></div>
         </div>
       </section>
 
-      <!-- Love Cards Section -->
-      <section class="love-cards-section">
-        <h2 class="cards-title">Things I Love About You</h2>
-        <p class="cards-subtitle">Every day reveals a new reason why you're special to me ♡</p>
-
-        <div class="love-cards-grid">
-          <!-- Day 1 - Feb 2 -->
-          <div class="love-card" data-day="1">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 1</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your beautiful smile that lights up my world</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 2 - Feb 3 -->
-          <div class="love-card" data-day="2">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 2</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your kindness and compassion for others</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 3 - Feb 4 -->
-          <div class="love-card" data-day="3">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 3</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your intelligence and curiosity</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 4 - Feb 5 -->
-          <div class="love-card" data-day="4">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 4</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your strength and resilience</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 5 - Feb 6 -->
-          <div class="love-card" data-day="5">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 5</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your creativity and imagination</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 6 - Feb 7 -->
-          <div class="love-card" data-day="6">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 6</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your beautiful eyes that I could get lost in</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 7 - Feb 8 -->
-          <div class="love-card" data-day="7">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 7</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>The sound of your voice</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 8 - Feb 9 -->
-          <div class="love-card" data-day="8">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 8</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>How you always know what to say</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 9 - Feb 10 -->
-          <div class="love-card" data-day="9">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 9</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your determination and ambition</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 10 - Feb 11 (Anniversary!) -->
-          <div class="love-card anniversary-card" data-day="10">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 10 : Happy Anniversary!</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>The day you said yes to being mine</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 11 - Feb 12 -->
-          <div class="love-card" data-day="11">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 11</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>Your warmth and tenderness</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Day 12 - Feb 13 -->
-          <div class="love-card" data-day="12">
-            <div class="card-inner">
-              <div class="card-front">
-                <span class="day-label">Day 12</span>
-                <span class="heart-icon">♡</span>
-              </div>
-              <div class="card-back">
-                <p>That you chose to be with me ♡</p>
-              </div>
-            </div>
-          </div>
+      <!-- Birthday Message Section -->
+      <section class="message-section">
+        <div class="message-card reveal-on-scroll">
+          <h2 class="message-heading">Happy Birthday, my love 💖🎂</h2>
         </div>
-      </section>
 
-      <!-- Video Reveal Section -->
-      <section class="reveal-section" id="reveal-section">
-        <div class="reveal-content hidden" id="reveal-content">
-          <h2 class="reveal-title">🎉 Happy Anniversary, My Love! 🎉</h2>
-          <p class="reveal-subtitle">On this special day, discover where our Valentine's adventure begins...</p>
-          <div class="video-container">
-            <blockquote
-              class="tiktok-embed"
-              cite="https://www.tiktok.com/@restaurantlhybride/video/7471370543938292998"
-              data-video-id="7471370543938292998"
-              style="max-width: 605px; min-width: 325px;">
-              <section>
-                <a target="_blank" href="https://www.tiktok.com/@restaurantlhybride">@restaurantlhybride</a>
-              </section>
-            </blockquote>
-          </div>
-          <p class="reveal-message">I can't wait to celebrate Valentine's Day with you here, babe ♡</p>
+        <div class="message-card reveal-on-scroll">
+          <p>Today is all about you — your smile, your heart, and the beautiful energy you bring into my life. I'm so grateful for you, not just today, but every single day I get to call you mine.</p>
         </div>
-        <div class="reveal-locked" id="reveal-locked">
-          <span class="lock-icon">🔒</span>
-          <p>The surprise will be revealed on our anniversary — February 11th!</p>
-          <p class="countdown-hint">Keep checking back each day for new love notes ♡</p>
+
+        <div class="message-card reveal-on-scroll">
+          <p>May this new year bring you happiness that feels effortless, dreams that keep coming true, and moments that remind you how special you are. You deserve love, laughter, peace, and everything good this world has to offer — and I hope I get to be right beside you through it all.</p>
+        </div>
+
+        <div class="message-card reveal-on-scroll">
+          <p>Thank you for being you, for loving me the way you do, and for making my life brighter just by being in it. Here's to celebrating you today and always 🥂✨</p>
+        </div>
+
+        <div class="message-card final-card reveal-on-scroll">
+          <p class="final-message">Have the most amazing birthday — you mean more to me than words can say ❤️</p>
         </div>
       </section>
 
       <!-- Footer -->
-      <footer class="footer">
-        <p>Made with ♡ just for you, Carole</p>
+      <footer class="footer reveal-on-scroll">
+        <p>Made with all my love, just for you 💖</p>
+        <p class="footer-name">— Your Man ♡</p>
       </footer>
     </div>
 
     <script src="script/main.js"></script>
-    <script async src="https://www.tiktok.com/embed.js"></script>
   </body>
 </html>
